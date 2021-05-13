@@ -1,7 +1,7 @@
 import os
 
 from src.entities import TrainPipelineParams
-from src.train_pipeline import train_pipeline
+from src.pipelines.train_pipeline import train_pipeline
 
 
 def test_train_pipeline(
@@ -12,7 +12,6 @@ def test_train_pipeline(
 ):
 
     metrics = train_pipeline(train_pipeline_params)
-    assert 0 < metrics["ROC_AUC"] <= 1
     assert 0 < metrics["Accuracy"] <= 1
     assert 0 < metrics["F1"] <= 1
 

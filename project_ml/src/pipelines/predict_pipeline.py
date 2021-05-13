@@ -7,7 +7,7 @@ import hydra
 
 from src.entities.predict_pipeline_params import PredictPipelineParams, PredictPipelineParamsSchema
 from src.models import predict
-from src.utils import read_data, load_pkl
+from src.utils import read_data, save_predictions, load_model, load_transformer
 
 logger = logging.getLogger("ml_project/predict_pipeline")
 
@@ -19,18 +19,18 @@ def predict_pipeline(predict_pipeline_params: PredictPipelineParams):
     logger.info("Finished loading data")
 
     logger.info("Load pretrained transformer")
-    transformer = load_pkl(predict_pipeline_params.pipeline_path)
+    transformer = load_transformer(predict_pipeline_params.transformer_path)
     logger.info("Finished loading pretrained transformer")
     transformed_data = pd.DataFrame(transformer.transform(data))
 
     logger.info("Load pretrained model")
-    model = load_pkl(predict_pipeline_params.model_path)
+    model = load_model(predict_pipeline_params.model_path)
     logger.info("Finished loading pretrained model")
 
     logger.info("Make predictions")
     predictions = predict(model, transformed_data)
     predictions = pd.DataFrame(predictions)
-    predictions.to_csv(predict_pipeline_params.output_data_path, header=False)
+    save_predictions(predictions, predict_pipeline_params.output_data_path)
     logger.info(f"Prediction saved to file{predict_pipeline_params.output_data_path}")
 
     return predictions

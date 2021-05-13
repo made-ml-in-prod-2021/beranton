@@ -10,7 +10,7 @@ from src.data import split_train_val
 from src.entities.train_pipeline_params import TrainPipelineParams, TrainPipelineParamsSchema
 from src.features.features import get_target_column, make_transformer
 from src.models import train, predict, evaluate
-from src.utils import read_data, save_pkl, save_metrics_json
+from src.utils import read_data, save_model, save_transformer, save_metrics_json
 
 
 logger = logging.getLogger("ml_project/train_pipeline")
@@ -29,7 +29,7 @@ def train_pipeline(training_pipeline_params: TrainPipelineParams) -> Dict[str, f
     logger.info("Preprocess data")
     transformer = make_transformer(training_pipeline_params.feature_params)
     transformer.fit(train_X)
-    save_pkl(transformer, training_pipeline_params.path_config.output_transformer_path)
+    save_transformer(transformer, training_pipeline_params.path_config.output_transformer_path)
     train_features = pd.DataFrame(transformer.transform(train_X))
     train_target = get_target_column(train_X, training_pipeline_params.feature_params)
     logger.info("Finished preprocessing data")
@@ -43,12 +43,12 @@ def train_pipeline(training_pipeline_params: TrainPipelineParams) -> Dict[str, f
     val_target = get_target_column(val_X, training_pipeline_params.feature_params)
     predictions = predict(model, val_features)
     metrics = evaluate(predictions, val_target)
-    
+
     save_metrics_json(training_pipeline_params.path_config.metrics_path, metrics)
     logger.info("Finished evaluating model")
     logger.info(f"Model scores: {metrics}")
 
-    save_pkl(model, training_pipeline_params.path_config.output_model_path)
+    save_model(model, training_pipeline_params.path_config.output_model_path)
     logger.info("Save model")
 
     return metrics

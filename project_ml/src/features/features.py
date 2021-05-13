@@ -6,7 +6,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
 
-from .transformer import Transformer
+from .transformers import Transformer
 from src.entities.feature_params import FeatureParams
 
 
@@ -20,6 +20,7 @@ def preprocess_numerical_features_normalized() -> Pipeline:
 
     return numerical_pipeline
 
+
 def preprocess_numerical_features() -> Pipeline:
     numerical_pipeline = Pipeline(
         [
@@ -28,6 +29,7 @@ def preprocess_numerical_features() -> Pipeline:
     )
 
     return numerical_pipeline
+
 
 def preprocess_categorical_features() -> Pipeline:
     categorical_pipeline = Pipeline(
@@ -39,6 +41,7 @@ def preprocess_categorical_features() -> Pipeline:
 
     return categorical_pipeline
 
+
 def make_transformer(params: FeatureParams) -> ColumnTransformer:
     if params.normalize_numerical:
         transformer = ColumnTransformer(
@@ -46,7 +49,7 @@ def make_transformer(params: FeatureParams) -> ColumnTransformer:
                 ("categorical_pipeline",
                  preprocess_categorical_features(),
                  params.categorical_features),
-                
+
                 ("numerical_pipeline",
                  preprocess_numerical_features_normalized(),
                  params.numerical_features)
@@ -59,13 +62,14 @@ def make_transformer(params: FeatureParams) -> ColumnTransformer:
                 ("categorical_pipeline",
                  preprocess_categorical_features(),
                  params.categorical_features),
-                 ("numerical_pipeline",
-                  preprocess_numerical_features(),
-                  params.numerical_features),
+                ("numerical_pipeline",
+                 preprocess_numerical_features(),
+                 params.numerical_features),
             ]
         )
 
     return transformer
+
 
 def get_target_column(df: pd.DataFrame, params: FeatureParams) -> pd.Series:
     return df[params.target_col]

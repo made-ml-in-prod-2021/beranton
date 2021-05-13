@@ -15,4 +15,4 @@ class TrainPipelineParams:
     train_params: RandomForestClassifierParams
 
 
-TrainPipelineParamsSchema = class_schema(TrainPipelineParams) 
+TrainPipelineParamsSchema = class_schema(TrainPipelineParams)

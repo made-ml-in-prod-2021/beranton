@@ -1,4 +1,5 @@
 from typing import NoReturn, List, Tuple
+from py._path.local import LocalPath
 
 import pytest
 import pandas as pd
@@ -6,33 +7,33 @@ from faker import Faker
 
 from src.entities import FeatureParams, RandomForestClassifierParams, TrainPipelineParams, SplitParams, PathParams, PredictPipelineParams
 from src.features.features import make_transformer, get_target_column
-from src.train_pipeline import train_pipeline
+from src.pipelines.train_pipeline import train_pipeline
 
 
 ROWS = 200
 
 
-@pytest.fixture(scope="session")
-def fake_data_path() -> str:
-    return "tests/test_data/test_data.csv"
+@pytest.fixture()
+def output_predictions_path(tmpdir: LocalPath) -> LocalPath:
+    return tmpdir.join("test_predicitons.csv")
 
-@pytest.fixture(scope="session")
-def output_predictions_path() -> str:
-    return "tests/test_data/test_predictions.csv"
 
-@pytest.fixture(scope="session")
-def load_model_path() -> str:
-    return "tests/test_data/test_model.pkl"
+@pytest.fixture()
+def load_model_path(tmpdir: LocalPath) -> LocalPath:
+    return tmpdir.join("test_model.pkl")
 
-@pytest.fixture(scope="session")
-def metrics_path() -> str:
-    return "tests/test_data/test_metrics.json"
 
-@pytest.fixture(scope="session")
-def load_transformer_path() -> str:
-    return "tests/test_data/test_transformer.pkl"
+@pytest.fixture()
+def metrics_path(tmpdir: LocalPath) -> LocalPath:
+    return tmpdir.join("test_metrics.json")
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture()
+def load_transformer_path(tmpdir: LocalPath) -> LocalPath:
+    return tmpdir.join("test_transformer.pkl")
+
+
+@pytest.fixture()
 def numerical_features() -> List[str]:
     return [
         "age",
@@ -42,7 +43,8 @@ def numerical_features() -> List[str]:
         "oldpeak",
     ]
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture()
 def categorical_features() -> List[str]:
     return [
         "sex",
@@ -55,20 +57,23 @@ def categorical_features() -> List[str]:
         "thal",
     ]
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture()
 def target_col() -> str:
     return "target"
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def normalize_numerical_true() -> bool:
     return True
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture()
 def normalize_numerical_false() -> bool:
     return False
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture()
 def feature_params_normalized(
         categorical_features: List[str],
         numerical_features: List[str],
@@ -83,7 +88,8 @@ def feature_params_normalized(
     )
     return feature_params
 
-@pytest.fixture(scope="session")
+
+@pytest.fixture()
 def feature_params(
         categorical_features: List[str],
         numerical_features: List[str],
@@ -98,7 +104,8 @@ def feature_params(
     )
     return feature_params
 
-@pytest.fixture(scope="session") 
+
+@pytest.fixture()
 def fake_data() -> pd.DataFrame:
     fake = Faker()
     Faker.seed(23)
@@ -121,7 +128,16 @@ def fake_data() -> pd.DataFrame:
 
     return pd.DataFrame(data=fake_data)
 
-@pytest.fixture(scope="package")
+
+@pytest.fixture()
+def fake_data_path(tmpdir: LocalPath, fake_data) -> LocalPath:
+    data_path = tmpdir.join("test_data.csv")
+    fake_data.to_csv(data_path)
+
+    return data_path
+
+
+@pytest.fixture()
 def random_forest_training_params() -> RandomForestClassifierParams:
     model = RandomForestClassifierParams(
         model_type="RandomForestClassifier",
@@ -132,7 +148,8 @@ def random_forest_training_params() -> RandomForestClassifierParams:
 
     return model
 
-@pytest.fixture(scope="package")
+
+@pytest.fixture()
 def transformed_dataframe(
         fake_data: pd.DataFrame, feature_params_normalized: FeatureParams
 ) -> Tuple[pd.Series, pd.DataFrame]:
@@ -144,7 +161,8 @@ def transformed_dataframe(
 
     return target, transformed_features
 
-@pytest.fixture(scope="package")
+
+@pytest.fixture()
 def train_pipeline_params(
     fake_data_path: str,
     load_model_path: str,
@@ -178,7 +196,8 @@ def train_pipeline_params(
     )
     return train_pipeline_parms
 
-@pytest.fixture(scope="package")
+
+@pytest.fixture()
 def predict_pipeline_params(
     fake_data_path: str,
     load_model_path: str,
@@ -189,12 +208,12 @@ def predict_pipeline_params(
     pred_pipeline_params = PredictPipelineParams(
         input_data_path=fake_data_path,
         output_data_path=output_predictions_path,
-        pipeline_path=load_transformer_path,
+        transformer_path=load_transformer_path,
         model_path=load_model_path,
     )
     return pred_pipeline_params
 
-@pytest.fixture(scope="package")
+
+@pytest.fixture()
 def train_on_fake_data(train_pipeline_params: TrainPipelineParams) -> NoReturn:
     train_pipeline(train_pipeline_params)
-

@@ -1,7 +1,7 @@
 import os
 
 from src.entities import PredictPipelineParams
-from src.predict_pipeline import predict_pipeline
+from src.pipelines.predict_pipeline import predict_pipeline
 
 
 def test_eval_pipeline(predict_pipeline_params: PredictPipelineParams,
