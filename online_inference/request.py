@@ -17,9 +17,9 @@ def load_data(filepath: str):
     return data
 
 
-@click.comman()
+@click.command()
 @click.option("--file_path", default="data.csv")
-@click.option("--count", deafult=1, help="Number of data rows")
+@click.option("--count", deafault=1, help="Number of data rows")
 def make_request(file_path: str, count: int):
     data = load_data(file_path)
     features = list(data.columns)
@@ -28,7 +28,7 @@ def make_request(file_path: str, count: int):
         count = len(data)
 
     for i in range(count):
-        request_data = [x.item() if isinstance(x, np.generic) else x for in data.iloc[i].tolist()]
+        request_data = [x.item() if isinstance(x, np.generic) else x for x in data.iloc[i].tolist()]
         request_data = dict(zip(features, request_data))
         response = requests.get(
             url=f"http://{SERVICE_HOST}:{SERVICE_PORT}/predict",
