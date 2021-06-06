@@ -1,4 +1,4 @@
 input_data_path: "data/heart.csv"
 output_data_path: "models/predictions.csv"
-transformer_path: "models/transformer.pkl"
+pipeline_path: "models/transformer.pkl"
 model_path: "models/model.pkl"

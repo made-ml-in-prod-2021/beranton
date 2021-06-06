@@ -8,8 +8,8 @@ class PredictPipelineParams:
     """ Defines model and data predict pipeline path. """
     input_data_path: str
     output_data_path: str
-    transformer_path: str
+    pipeline_path: str
     model_path: str
 
 
-PredictPipelineParamsSchema = class_schema(PredictPipelineParams)
+PredictPipelineParamsSchema = class_schema(PredictPipelineParams) 

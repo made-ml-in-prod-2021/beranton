@@ -9,4 +9,4 @@ class FeatureParams:
     categorical_features: List[str]
     numerical_features: List[str]
     target_col: Optional[str]
-    normalize_numerical: bool
+    normalize_numerical: bool 

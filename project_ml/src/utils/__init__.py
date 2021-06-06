@@ -1,12 +1,9 @@
-from .utils import (load_model, load_transformer, save_model, save_transformer,
-                    save_metrics_json, read_data, save_predictions)
+from .utils import load_pkl, save_pkl, save_metrics_json, read_data
+
 
 __all__ = [
-    "load_model",
-    "load_transformer",
-    "save_model",
-    "save_transformer"
+    "load_pkl",
+    "save_pkl",
     "save_metrics_json",
     "read_data",
-    "save_predictions",
 ]

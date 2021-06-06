@@ -6,7 +6,7 @@ from .features import (
     get_target_column
 )
 
-from .transformers import Transformer
+from .transformer import Transformer
 
 
 __all__ = [

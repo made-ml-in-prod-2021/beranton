@@ -16,7 +16,6 @@ def test_extract_target(fake_data: pd.DataFrame, feature_params_normalized: Feat
     assert len(target_df) == len(fake_data)
     assert fake_data[feature_params_normalized.target_col].equals(target_df)
 
-
 def test_custom_transformer(fake_data: pd.DataFrame, feature_params_normalized: FeatureParams) -> NoReturn:
     fake_data_np = fake_data[feature_params_normalized.numerical_features].to_numpy()
     correct_fake_np = (fake_data_np - fake_data_np.mean(axis=0)) / fake_data_np.std(axis=0)

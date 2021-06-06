@@ -8,4 +8,4 @@ class PathParams:
     input_data_path: str
     output_model_path: str
     output_transformer_path: str
-    metrics_path: str
+    metrics_path: str 
