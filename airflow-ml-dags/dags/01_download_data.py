@@ -2,8 +2,13 @@ from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.utils.dates import days_ago
 
-from constant import DEFAULT_ARGS, DATA_RAW_DIR, DATA_VOLUME_DIR, \
-    DATA_RAW_FEATURES_FILE_NAME, DATA_RAW_TARGET_FILE_NAME
+from constant import (
+    DEFAULT_ARGS,
+    DATA_RAW_DIR,
+    DATA_VOLUME_DIR,
+    DATA_RAW_FEATURES_FILE_NAME,
+    DATA_RAW_TARGET_FILE_NAME,
+)
 
 
 with DAG(
@@ -13,8 +18,8 @@ with DAG(
     start_date=days_ago(0, 2),
 ) as dag:
 
-    features_path = DATA_RAW_DIR + '/' + DATA_RAW_FEATURES_FILE_NAME
-    target_path = DATA_RAW_DIR + '/' + DATA_RAW_TARGET_FILE_NAME
+    features_path = DATA_RAW_DIR + "/" + DATA_RAW_FEATURES_FILE_NAME
+    target_path = DATA_RAW_DIR + "/" + DATA_RAW_TARGET_FILE_NAME
 
     data_download = DockerOperator(
         image="airflow-download",

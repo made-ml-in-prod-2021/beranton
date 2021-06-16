@@ -3,15 +3,22 @@ from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.sensors.filesystem import FileSensor
 from airflow.utils.dates import days_ago
 
-from constant import DEFAULT_ARGS, DATA_RAW_DIR, DATA_VOLUME_DIR, DATA_RAW_FEATURES_FILE_NAME, \
-    DATA_RAW_TARGET_FILE_NAME, DATA_PROCESSED_DIR, MODELS_DIR_DEFAULT
+from constant import (
+    DEFAULT_ARGS,
+    DATA_RAW_DIR,
+    DATA_VOLUME_DIR,
+    DATA_RAW_FEATURES_FILE_NAME,
+    DATA_RAW_TARGET_FILE_NAME,
+    DATA_PROCESSED_DIR,
+    MODELS_DIR_DEFAULT,
+)
 
 
 with DAG(
-        "train",
-        default_args=DEFAULT_ARGS,
-        schedule_interval="@weekly",
-        start_date=days_ago(2),
+    "train",
+    default_args=DEFAULT_ARGS,
+    schedule_interval="@weekly",
+    start_date=days_ago(2),
 ) as dag:
 
     features_path = DATA_RAW_DIR + "/" + DATA_RAW_FEATURES_FILE_NAME
@@ -22,7 +29,7 @@ with DAG(
         command=f"--input-dir {DATA_RAW_DIR} --output-dir {DATA_PROCESSED_DIR} ",
         task_id="docker-airflow-preprocess",
         do_xcom_push=False,
-        volumes=[f"{DATA_VOLUME_DIR}:/data"]
+        volumes=[f"{DATA_VOLUME_DIR}:/data"],
     )
 
     split = DockerOperator(
@@ -46,8 +53,7 @@ with DAG(
         command=f"--input-dir {DATA_PROCESSED_DIR} --input-model-dir {MODELS_DIR_DEFAULT}",
         task_id="docker-airflow-validate",
         do_xcom_push=False,
-        volumes=[f"{DATA_VOLUME_DIR}:/data"]
+        volumes=[f"{DATA_VOLUME_DIR}:/data"],
     )
 
-    """[wait_for_train_data, wait_for_target] >> """
     preprocess >> split >> train >> validate

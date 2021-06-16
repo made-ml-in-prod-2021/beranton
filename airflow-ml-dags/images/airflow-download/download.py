@@ -17,5 +17,5 @@ def download(output_dir: str, output_dir_features: str, output_dir_target: str):
     y.to_csv(output_dir_target, index=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     download()
