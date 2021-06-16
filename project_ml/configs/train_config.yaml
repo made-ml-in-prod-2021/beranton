@@ -1,5 +1,0 @@
-defaults:
-  - path_config: path_config
-  - split_params: split_params
-  - train_params: random_forest_classifier
-  - feature_params: features
